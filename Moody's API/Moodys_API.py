@@ -10,11 +10,16 @@ import hmac
 import io
 from dotenv import load_dotenv
 import os
+import openpyxl
 
 
 # basketId = "16DE76AB-4555-4AC2-9F1A-5238B37A4327"
 # The id can be found in the URL of the page of the basket of mnemonics, but basket name also works:
 BASKET_NAME = "TM Forecast - Data Buffet"
+
+# provide directory to save the file:
+target_dir = r'C:\Users\ALi\OneDrive - MMC\Desktop\MMCR\Apt Forecasts\Forecast process 2025\Data\MA Forecast Data'
+filename = r'Data Buffet - TM forecast data.xlsx'
 
 #####
 # Setup:
@@ -22,8 +27,8 @@ BASKET_NAME = "TM Forecast - Data Buffet"
 # Get your keys at:
 # https://www.economy.com/myeconomy/api-key-info
 load_dotenv()
-acckey=str(os.getenv("acckey"))
-enckey=str(os.getenv("enckey"))
+acckey=str(os.getenv("acc_key"))
+enckey=str(os.getenv("enc_key"))
 
 
 #####
@@ -97,4 +102,4 @@ data_df = data_df.set_index(data_df.columns[0])
 data_df.dropna(how='all', axis=1, inplace=True)
 data_df = data_df.loc[:, (data_df != "").any(axis=0)]
 
-print(data_df)
+data_df.to_excel(os.path.join(target_dir,filename), engine="openpyxl")
