@@ -13,8 +13,8 @@ import os
 
 
 # basketId = "16DE76AB-4555-4AC2-9F1A-5238B37A4327"
-# The id can be found in the URL of the page of the basket of mnemonics
-BASKET_NAME = "MMCR - DA - DEN"
+# The id can be found in the URL of the page of the basket of mnemonics, but basket name also works:
+BASKET_NAME = "TM Forecast - Data Buffet"
 
 #####
 # Setup:
@@ -96,3 +96,5 @@ data_df = pd.read_excel(io.BytesIO(get_basket.content))
 data_df = data_df.set_index(data_df.columns[0])
 data_df.dropna(how='all', axis=1, inplace=True)
 data_df = data_df.loc[:, (data_df != "").any(axis=0)]
+
+print(data_df)
