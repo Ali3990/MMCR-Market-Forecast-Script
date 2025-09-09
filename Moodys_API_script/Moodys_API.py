@@ -13,14 +13,6 @@ import os
 import openpyxl
 
 
-# basketId = "16DE76AB-4555-4AC2-9F1A-5238B37A4327"
-# The id can be found in the URL of the page of the basket of mnemonics, but basket name also works:
-BASKET_NAME = "TM Forecast - Data Buffet"
-
-# provide directory to save the output file:
-target_dir = r'C:\Users\ALi\OneDrive - MMC\Desktop\MMCR\Apt Forecasts\Forecast process 2025\Data\MA Forecast Data'
-filename = BASKET_NAME + ".xlsx"
-
 #####
 # Setup:
 # 1. Store your access key, encryption key, and basket name.
@@ -30,6 +22,12 @@ load_dotenv()
 acckey=str(os.getenv("acc_key"))
 enckey=str(os.getenv("enc_key"))
 
+# # The id can be found in the URL of the page of the basket of mnemonics, but basket name also works:
+BASKET_NAME = "TM Forecast - Data Buffet"
+
+# # provide directory to save the output file:
+target_dir = r'C:\Users\ALi\OneDrive - MMC\Desktop\MMCR\Apt Forecasts\Forecast process 2025\Data\MA Forecast Data'
+filename = BASKET_NAME + ".xlsx"
 
 #####
 # Function: Make API request, including a freshly generated signature.
@@ -42,6 +40,9 @@ enckey=str(os.getenv("enc_key"))
 #
 # Returns:
 # HTTP response object.
+
+ENC_KEY = enckey
+ACC_KEY = acckey
 
 def api_call(apiCommand, accKey, encKey, call_type="GET"):
     url = "https://api.economy.com/data/v1/" + apiCommand
@@ -60,10 +61,7 @@ def api_call(apiCommand, accKey, encKey, call_type="GET"):
         response = requests.get(url, headers=head)
     return(response)
 
-ENC_KEY = enckey
-ACC_KEY = acckey
-
-def download_basket(basket_name:str):
+def download_basket(BASKET_NAME, target_dir, filename, ACC_KEY, ENC_KEY):
     #####
     # 1. Set Basket name at the beginning.
     # 2. Get list of baskets.
@@ -106,5 +104,5 @@ def download_basket(basket_name:str):
 
     return data_df
 
-#test
-download_basket(filename)
+# #test
+# download_basket(BASKET_NAME, target_dir, filename, acckey, enckey)
