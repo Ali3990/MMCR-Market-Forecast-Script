@@ -5,3 +5,10 @@ Instructions:
 
 1. Use the Mnemonic_compiler to add any new markets or mnemonics.
 2. For markets that have multiple geocodes, refer to instructions within MA_Transform.py to account for aggregation/weighted averaging functions.
+3. Create a .env file with your Moody's API credentials (no quotations on the access or encryption key), save within the Moodys_API_script folder. If you do not have one, visit and generate keys at: https://www.economy.com/myeconomy/api-key-info 
+
+    Example:
+    acc_key=dsfnl3950-290******
+    enc_key=sf097fdss-23jh*****
+
+4. 
