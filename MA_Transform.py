@@ -3,7 +3,6 @@ import os
 import openpyxl
 import pandas as pd
 import datetime
-import sys
 from pathlib import Path
 from Moodys_API_script.Moodys_API import download_basket
 from openpyxl import Workbook
@@ -14,21 +13,27 @@ load_dotenv()
 acckey=str(os.getenv("acc_key"))
 enckey=str(os.getenv("enc_key"))
 
-# Save path of the split data buffet API results to sibling folder
-script_dir = Path(__file__).resolve().parent
-databuffet_dir = script_dir.parent / "Data" / "MA Forecast Data"
-databuffet_dir.mkdir(parents=True, exist_ok=True)
+# create folder director. Refer to README.md for more details on structure.
+root = Path(__file__).parent.parent
+folder_paths = [
+    root/"Data"/"MA Forecast Data",
+    root/"Data"/"REIS Data",
+    root/"Forecast Workbooks"
+]
 
+for folder in folder_paths:
+    folder.mkdir(parents=True, exist_ok=True)
+
+databuffet_dir = root / "Data" / "MA Forecast Data"
 
 # See api script for instructions on setting variables
 BASKET_NAME = "TM Forecast - Data Buffet"
-# target_dir = r'C:\Users\ALi\OneDrive - MMC\Desktop\MMCR\Apt Forecasts\Forecast process 2025\Data\MA Forecast Data'
 filename = BASKET_NAME + ".xlsx"
 
 # runs the api call and stores dataframe in memory
 df = download_basket(BASKET_NAME, databuffet_dir, filename, acckey, enckey)
 
-# See Mnemonic_compiler.xlsx file >> 'Dict' for dictionary compiler. Add more markets as necessary. Paste the entire dictionary here.
+# See 'Mnemonic_compiler.xlsx' file >> 'Dict' tab for dictionary compiler. Add more markets as necessary. Paste the entire dictionary here.
 # e.g. 'market': ['MMC abbreviation', 'REIS abbreviation', 'geocode']
 tm_dict = {
     'US Metro Total': ['US', 'US', 'IUSA'],
@@ -67,8 +72,8 @@ tm_dict = {
     'Raleigh-Durham 2':  ['DUR',  'RD',  'IUSA_MDUR']
 }
 
-def moody_data_melt(tm_dict, df, save_dir):
-    output_path = os.path.join(save_dir, "TM_DBdata2.xlsx")
+def moody_data_transform(tm_dict, df, save_dir):
+    output_path = os.path.join(save_dir, "Mnemonic_transformed_data.xlsx")
     
     wb = Workbook()
     ws = wb.active
@@ -85,13 +90,13 @@ def moody_data_melt(tm_dict, df, save_dir):
         # ensure first column is always included and no duplicates
         sub_df = df[matching_cols].copy()
 
-        # trim first 5 rows for non-first blocks
+        # trim first 5 rows
         if not first_block:
             sub_df = sub_df.iloc[5:]
         else:
             first_block = False
 
-        # add Market column as the first column
+        # add Market column as the second column
         sub_df.insert(0, "Market", market)
 
         # write to Excel
@@ -104,7 +109,7 @@ def moody_data_melt(tm_dict, df, save_dir):
     wb.save(output_path)
     print(f"✅ Saved vertically stacked Excel to {output_path}")
     
-moody_data_melt(tm_dict, df, databuffet_dir)
+moody_data_transform(tm_dict, df, databuffet_dir)
 
 
 
