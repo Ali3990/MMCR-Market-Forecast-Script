@@ -31,7 +31,7 @@ BASKET_NAME = "TM Forecast - Data Buffet"
 filename = BASKET_NAME + ".xlsx"
 
 # runs the api call and stores dataframe in memory
-df = download_basket(BASKET_NAME, databuffet_dir, filename, acckey, enckey)
+df = download_basket(BASKET_NAME, databuffet_dir, filename, acckey, enckey, engine="openpyxl")
 
 # See 'Mnemonic_compiler.xlsx' file >> 'Dict' tab for dictionary compiler. Add more markets as necessary. Paste the entire dictionary here.
 # e.g. 'market': ['MMC abbreviation', 'REIS abbreviation', 'geocode']
@@ -64,16 +64,16 @@ tm_dict = {
     'San Bernardino-Riverside':  ['SB',  'SB',  'IUSA_MRIV'],
     'Tampa-St. Petersburg':  ['TAM',  'TA',  'IUSA_MTAM'],
     'US Metro Total':  ['US',  'US',  'IUSA'],
-    'Seattle 1':  ['SEA',  'SE',  'IUSA_DMEVE'],
-    'Seattle 2':  ['EVE',  'SE',  'IUSA_DMSEB'],
-    'San Francisco 1':  ['SF',  'SF',  'IUSA_DMSAF'],
-    'San Francisco 2':  ['SR',  'SF',  'IUSA_DMSRF'],
-    'Raleigh-Durham 1':  ['RAL',  'RD',  'IUSA_MRAL'],
-    'Raleigh-Durham 2':  ['DUR',  'RD',  'IUSA_MDUR']
+    'Seattle':  ['SEA',  'SE',  'IUSA_DMEVE'],
+    'Seattle':  ['EVE',  'SE',  'IUSA_DMSEB'],
+    'San Francisco':  ['SF',  'SF',  'IUSA_DMSAF'],
+    'San Francisco':  ['SR',  'SF',  'IUSA_DMSRF'],
+    'Raleigh-Durham':  ['RAL',  'RD',  'IUSA_MRAL'],
+    'Raleigh-Durham':  ['DUR',  'RD',  'IUSA_MDUR']
 }
 
 def moody_data_transform(tm_dict, df, save_dir):
-    output_path = os.path.join(save_dir, "Mnemonic_transformed_data.xlsx")
+    output_path = os.path.join(save_dir, "Mnemonic_transformed_data_v2.xlsx")
     
     wb = Workbook()
     ws = wb.active

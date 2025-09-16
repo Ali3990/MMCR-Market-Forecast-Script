@@ -64,7 +64,7 @@ def api_call(apiCommand, accKey, encKey, call_type="GET"):
         response = requests.get(url, headers=head)
     return(response)
 
-def download_basket(BASKET_NAME, target_dir, filename, ACC_KEY, ENC_KEY):
+def download_basket(BASKET_NAME, target_dir, filename, ACC_KEY, ENC_KEY, engine):
     #####
     # 1. Set Basket name at the beginning.
     # 2. Get list of baskets.
@@ -103,9 +103,9 @@ def download_basket(BASKET_NAME, target_dir, filename, ACC_KEY, ENC_KEY):
     data_df.dropna(how='all', axis=1, inplace=True)
     data_df = data_df.loc[:, (data_df != "").any(axis=0)]
 
-    data_df.to_excel(os.path.join(target_dir,filename), engine="openpyxl")
+    data_df.to_excel(os.path.join(target_dir,filename), engine=engine)
 
     return data_df
 
 # #test
-# download_basket(BASKET_NAME, target_dir, filename, acckey, enckey)
+# download_basket(BASKET_NAME, target_dir, filename, acckey, enckey, engine="openpyxl")
