@@ -11,4 +11,13 @@ Instructions:
     acc_key=dsfnl3950-290******
     enc_key=sf097fdss-23jh*****
 
-4. 
+4. MA_Transform.py will call the save basket on data buffet, transform the data in a vertical stack and apply an identifier for later use. Folder directories will also be automatically created at the parent folder level.
+
+*Created directories:
+
+(Saved-folder-name)
+    |_MMCR-Market-Forecast-Script
+    |_*Forecast Workbooks
+    |_*Data
+        |_*REIS Data
+        |_*MA Forecast Data
