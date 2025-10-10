@@ -2,6 +2,7 @@
 Forecasting process for the first half of the year.
 
 Instructions:
+Note: Copy 'MMCR-Market-Forecast-Script' to a dedicated folder. The script will create multiple directories to store your files.
 
 1. Use the Mnemonic_compiler to add any new markets or mnemonics.
 2. For markets that have multiple geocodes, refer to instructions within MA_Transform.py to account for aggregation/weighted averaging functions.
