@@ -2,6 +2,7 @@
 Forecasting process for the first half of the year.
 
 Instructions:
+Note: Copy 'MMCR-Market-Forecast-Script' to a dedicated folder. The script will create multiple directories to store your files.
 
 1. Use the Mnemonic_compiler.xlsx to add any new markets or mnemonics. This is a dynamic process, so users can add as many markets or mnemonics. The data will be formatted to fit alongside REIS data, however, it is advisable to keep to essential variables to reduce testing runtime.
 2. For markets that have multiple geocodes, refer to notes in Mnemonic_compiler.xlsx. The MA data for divisional metros will be merged (either sum or weighted average) in the main forecast file.
