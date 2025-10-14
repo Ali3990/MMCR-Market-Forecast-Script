@@ -3,13 +3,13 @@ Forecasting process for the first half of the year.
 
 Instructions:
 
-1. Use the Mnemonic_compiler to add any new markets or mnemonics.
-2. For markets that have multiple geocodes, refer to instructions within MA_Transform.py to account for aggregation/weighted averaging functions.
+1. Use the Mnemonic_compiler.xlsx to add any new markets or mnemonics. This is a dynamic process, so users can add as many markets or mnemonics. The data will be formatted to fit alongside REIS data, however, it is advisable to keep to essential variables to reduce testing runtime.
+2. For markets that have multiple geocodes, refer to notes in Mnemonic_compiler.xlsx. The MA data for divisional metros will be merged (either sum or weighted average) in the main forecast file.
 3. Create a .env file with your Moody's API credentials (no quotations on the access or encryption key), save within the Moodys_API_script folder. If you do not have one, visit and generate keys at: https://www.economy.com/myeconomy/api-key-info 
 
     Example:
-    acc_key=dsfnl3950-290******
-    enc_key=sf097fdss-23jh*****
+    acc_key=dsf50-290*****
+    enc_key=sf09s-23j*****
 
 4. MA_Transform.py will call the save basket on data buffet, transform the data in a vertical stack and apply an identifier for later use. Folder directories will also be automatically created at the parent folder level.
 
@@ -21,3 +21,5 @@ Instructions:
     |_*Data
         |_*REIS Data
         |_*MA Forecast Data
+
+5. Use the reg_test.py file to run the main forecast file under "./Forecast Workbooks" directory. Select the market you wish to test.
