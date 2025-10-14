@@ -4,6 +4,6 @@ from pathlib import Path
 
 filename = "TM Forecast (Lasso Regression) - 2h25"
 
-wb_path = Path(__file__).parent
+wb_path = r'./Forecast Workbooks/{}'.format(filename)
 
 print(wb_path)
