@@ -13,7 +13,7 @@ load_dotenv()
 acckey=str(os.getenv("acc_key"))
 enckey=str(os.getenv("enc_key"))
 
-# create folder director. Refer to README.md for more details on structure.
+# create folder directory. Refer to README.md for more details on structure.
 root = Path(__file__).parent.parent
 folder_paths = [
     root/"Data"/"MA Forecast Data",
