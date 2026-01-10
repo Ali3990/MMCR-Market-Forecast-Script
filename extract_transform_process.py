@@ -1,13 +1,12 @@
 # This process will use the Moody's Analytics API to retrieve data from baskets under the MA account. Refer to Mnemonics Compiler for list of compiled data baskets.
 import os
-import openpyxl
 import pandas as pd
-import datetime
 from pathlib import Path
 from Moodys_API_script.Moodys_API import download_basket
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 acckey=str(os.getenv("acc_key"))
@@ -36,7 +35,7 @@ df_double = download_basket(BASKET_NAME_D, databuffet_dir, BASKET_NAME_D+ ".xlsx
 
 # See 'Mnemonic_compiler.xlsx' file >> 'Dict' tab for dictionary compiler. Add more markets as necessary. Paste the entire dictionary here.
 # e.g. 'market': ['MMC abbreviation', 'REIS abbreviation', 'geocode']
-tm_dict = {
+tm_dict_singles = {
     'US Metro Total': ['US', 'US', 'IUSA'],
     'Denver':  ['DEN',  'DE',  'IUSA_MDEN'],
     'Los Angeles':  ['LA',  'LA',  'IUSA_DMLOS'],
@@ -65,53 +64,74 @@ tm_dict = {
     'San Bernardino-Riverside':  ['SB',  'SB',  'IUSA_MRIV'],
     'Tampa-St. Petersburg':  ['TAM',  'TA',  'IUSA_MTAM'],
     'US Metro Total':  ['US',  'US',  'IUSA'],
-    'Seattle 1':  ['SEA',  'SE',  'IUSA_DMEVE'],
-    'Seattle 2':  ['EVE',  'SE',  'IUSA_DMSEB'],
-    'San Francisco 1':  ['SF',  'SF',  'IUSA_DMSAF'],
-    'San Francisco 2':  ['SR',  'SF',  'IUSA_DMSRF'],
-    'Raleigh-Durham 1':  ['RAL',  'RD',  'IUSA_MRAL'],
-    'Raleigh-Durham 2':  ['DUR',  'RD',  'IUSA_MDUR']
+    # 'Seattle 1':  ['SEA',  'SE',  'IUSA_DMEVE'],
+    # 'Seattle 2':  ['EVE',  'SE',  'IUSA_DMSEB'],
+    # 'San Francisco 1':  ['SF',  'SF',  'IUSA_DMSAF'],
+    # 'San Francisco 2':  ['SR',  'SF',  'IUSA_DMSRF'],
+    # 'Raleigh-Durham 1':  ['RAL',  'RD',  'IUSA_MRAL'],
+    # 'Raleigh-Durham 2':  ['DUR',  'RD',  'IUSA_MDUR']
 }
+
+tm_dict_doubles = {
+    'Seattle': ['SEA', 'SE', ['IUSA_DMEVE', 'IUSA_DMSEB']],
+    'San Francisco': ['SF', 'SF', ['IUSA_DMSAF', 'IUSA_DMSRF']],
+    'Raleigh-Durham': ['RAL', 'RD', ['IUSA_MRAL', 'IUSA_MDUR']]
+}
+
+import re
+
+def col_matches_geocode(col, geocodes):
+    for g in geocodes:
+        # Match geocode as a token, not a substring
+        pattern = rf'(?<![A-Z0-9_]){re.escape(g)}(?![A-Z0-9_])'
+        if re.search(pattern, col):
+            return True
+    return False
+
 
 def moody_data_transform(tm_dict, df, save_dir, output_filename):
     output_path = os.path.join(save_dir, output_filename)
     
     wb = Workbook()
     ws = wb.active
-    first_block = True  # used to track first iteration for row trimming
+    first_block = True
 
     for market, values in tm_dict.items():
-        geocode = values[2]
+        raw_geocode = values[2]
 
-        # find columns matching the geocode
-        matching_cols = [col for col in df.columns if "." in col and col.split(".")[-1] == geocode]
+        # 🔑 Normalize: always work with a list of geocodes
+        geocodes = raw_geocode if isinstance(raw_geocode, list) else [raw_geocode]
+
+        # find columns matching ANY of the geocodes
+        matching_cols = [
+            col for col in df.columns
+            if col_matches_geocode(col, geocodes)
+        ]
         if not matching_cols:
             continue
 
-        # ensure first column is always included and no duplicates
         sub_df = df[matching_cols].copy()
 
-        # trim first 5 rows
+        # trim first 5 rows except first block
         if not first_block:
             sub_df = sub_df.iloc[5:]
         else:
             first_block = False
 
-        # add Market column as the second column
+        # insert Market column
         sub_df.insert(0, "Market", market)
 
         # write to Excel
         for r in dataframe_to_rows(sub_df, index=True, header=True):
             ws.append(r)
 
-        # add a blank row separator between blocks
         ws.append([])
 
     wb.save(output_path)
     print(f"✅ Saved vertically stacked Excel to {output_path}")
-    
-moody_data_transform(tm_dict, df_single, databuffet_dir, "MA data - transformed - single geos.xlsx")
-moody_data_transform(tm_dict, df_double, databuffet_dir, "MA data - transformed - double geos.xlsx")
+
+moody_data_transform(tm_dict_singles, df_single, databuffet_dir, "MA data - transformed - single geos.xlsx")
+moody_data_transform(tm_dict_doubles, df_double, databuffet_dir, "MA data - transformed - double geos.xlsx")
 
 
 
