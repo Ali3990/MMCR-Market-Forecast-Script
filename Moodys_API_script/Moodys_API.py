@@ -23,14 +23,14 @@ acckey=str(os.getenv("acc_key"))
 enckey=str(os.getenv("enc_key"))
 
 # The id can be found in the URL of the page of the basket of mnemonics, but basket name will work by itself:
-BASKET_NAME = "TM Forecast - Data Buffet"
+# BASKET_NAME = "TM Forecast - Double geocodes - Baseline"
 # basket_id = "E3BCC362-65B1-4970-9E5D-4407D4E28831"
 # !! Remember to set the start date of the basket to '1985M01' ("Jan 1985")
 
 
 # # provide directory to save the output file:
-target_dir = r'C:\Users\ALi\OneDrive - MMC\Desktop\MMCR\Apt Forecasts\Forecast process 2025\Data\MA Forecast Data'
-filename = BASKET_NAME + ".xlsx"
+# target_dir = r'C:\Users\Alan Li\Desktop\MMCR\Apt Forecasts\Forecast Process 2025\Data\MA Forecast Data'
+# filename = BASKET_NAME + ".xlsx"
 
 #####
 # Function: Make API request, including a freshly generated signature.

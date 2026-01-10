@@ -27,11 +27,12 @@ for folder in folder_paths:
 databuffet_dir = root / "Data" / "MA Forecast Data"
 
 # See api script for instructions on setting variables
-BASKET_NAME = "TM Forecast - Data Buffet"
-filename = BASKET_NAME + ".xlsx"
+BASKET_NAME_S = "TM Forecast - Single geocodes - Baseline"
+BASKET_NAME_D = "TM Forecast - Double geocodes - Baseline"
 
-# runs the api call and stores dataframe in memory
-df = download_basket(BASKET_NAME, databuffet_dir, filename, acckey, enckey, engine="openpyxl")
+# runs the api call and stores dataframe in memory. The single geocode basket + double geocode basket.
+df_single = download_basket(BASKET_NAME_S, databuffet_dir, BASKET_NAME_S + ".xlsx", acckey, enckey, engine="openpyxl")
+df_double = download_basket(BASKET_NAME_D, databuffet_dir, BASKET_NAME_D+ ".xlsx", acckey, enckey, engine="openpyxl")
 
 # See 'Mnemonic_compiler.xlsx' file >> 'Dict' tab for dictionary compiler. Add more markets as necessary. Paste the entire dictionary here.
 # e.g. 'market': ['MMC abbreviation', 'REIS abbreviation', 'geocode']
@@ -72,8 +73,8 @@ tm_dict = {
     'Raleigh-Durham 2':  ['DUR',  'RD',  'IUSA_MDUR']
 }
 
-def moody_data_transform(tm_dict, df, save_dir):
-    output_path = os.path.join(save_dir, "Mnemonic_transformed_data.xlsx")
+def moody_data_transform(tm_dict, df, save_dir, output_filename):
+    output_path = os.path.join(save_dir, output_filename)
     
     wb = Workbook()
     ws = wb.active
@@ -109,9 +110,8 @@ def moody_data_transform(tm_dict, df, save_dir):
     wb.save(output_path)
     print(f"✅ Saved vertically stacked Excel to {output_path}")
     
-moody_data_transform(tm_dict, df, databuffet_dir)
-
-
+moody_data_transform(tm_dict, df_single, databuffet_dir, "MA data - transformed - single geos.xlsx")
+moody_data_transform(tm_dict, df_double, databuffet_dir, "MA data - transformed - double geos.xlsx")
 
 
 
